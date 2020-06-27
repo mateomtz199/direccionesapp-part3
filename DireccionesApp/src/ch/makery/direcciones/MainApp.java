@@ -3,6 +3,7 @@ package ch.makery.direcciones;
 import java.io.IOException;
 
 import ch.makery.direcciones.model.Persona;
+import ch.makery.direcciones.view.PersonEditDialogController;
 import ch.makery.direcciones.view.PersonOverviewController;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -11,6 +12,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class MainApp extends Application {
@@ -88,6 +90,46 @@ public class MainApp extends Application {
 	 */
 	public ObservableList<Persona> getPersonData(){
 		return personData;
+	}
+	/**
+	 * Abre un cuadro de diálogo para editar detalles para la persona especificada.
+	 * Si el usuario hace clic en Aceptar, los cambios se guardan en el objeto
+	 * de persona proporcionado y se devuelve verdadero.
+	 *
+	 * @param persona objeto persona a editar
+	 * @return  verdadero si el usuario hizo clic en Aceptar, falso en caso contrario.
+	 */
+	public boolean showPersonEditDialog(Persona persona){
+		try {
+			//Cargue el archivo fxml y cree una nueva escena para el
+			//cuadro de diálogo emergente.
+			FXMLLoader loader = new FXMLLoader();
+			loader.setLocation(
+					MainApp.class.getResource("view/PersonEditDialog.fxml")
+					);
+			AnchorPane page = (AnchorPane) loader.load();
+
+			//Crear el cuadro de diálogo de la escena
+			Stage dialogStage = new Stage();
+			dialogStage.setTitle("Editar persona");
+			dialogStage.initModality(Modality.WINDOW_MODAL);
+			dialogStage.initOwner(primaryStage);
+			Scene scene = new Scene(page);
+			dialogStage.setScene(scene);
+
+			//Envia la persona al controlador
+			PersonEditDialogController controller = loader.getController();
+			controller.setDialogStage(dialogStage);
+			controller.setPerson(persona);
+
+			//Muestra el diálogo y espera hasta que el usuario lo cierre.
+			dialogStage.showAndWait();
+
+			return controller.isOkClicked();
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 	public static void main(String[] args) {
 		launch(args);

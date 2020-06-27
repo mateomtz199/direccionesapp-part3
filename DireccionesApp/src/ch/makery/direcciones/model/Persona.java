@@ -21,6 +21,11 @@ public class Persona {
 	private IntegerProperty codigoPostal;
 	private StringProperty ciudad;
 	private ObjectProperty<LocalDate> onomastico;
+	/**
+	 * Constructor con datos iniciales
+	 * @param nombre
+	 * @param apellido
+	 */
 	public Persona(String nombre, String apellido){
 		this.nombre = new SimpleStringProperty(nombre);
 		this.apellido = new SimpleStringProperty(apellido);
@@ -31,6 +36,13 @@ public class Persona {
 		this.ciudad = new SimpleStringProperty("Alguna ciudad");
 		this.onomastico = new SimpleObjectProperty<LocalDate>(LocalDate.of(1999,  2,  21));
 	}
+	/**
+	 * Constructor por default
+	 */
+	public Persona(){
+		this(null, null);
+	}
+
 	public StringProperty getNombre() {
 		return nombre;
 	}
